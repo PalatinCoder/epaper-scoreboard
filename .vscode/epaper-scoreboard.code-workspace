@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "../"
+		}
+	],
+	"settings": {
+		"idf.projectName": "epaper-scoreboard"
+	}
+}
