@@ -2,7 +2,7 @@
 
 static const char* TAG = "main";
 
-void app_main()
+extern "C" void app_main()
 {
     ESP_LOGI(TAG, "initialized");
 }
