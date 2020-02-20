@@ -4,13 +4,16 @@
             "name": "ESP",
             "cStandard": "c11",
             "cppStandard": "c++17",
-            "includePath": ["${config:idf.espIdfPathWin}/components/**"],
+            "includePath": [
+                "${config:idf.espIdfPathWin}/components/**",
+                "${workspaceFolder}/components/**"
+            ],
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "browse": {
                 "path": [
                     "${config:idf.espIdfPathWin}/components"
                 ],
-                "limitSymbolsToIncludedHeaders": false   
+                "limitSymbolsToIncludedHeaders": false
             }
         }
     ],
