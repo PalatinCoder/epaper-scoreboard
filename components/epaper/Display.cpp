@@ -300,11 +300,11 @@ int Display::CanvasWidth() {
     switch(m_rotate) {
         case E_PAPER_ROTATE_90:
         case E_PAPER_ROTATE_270:
-            return m_height;
+            return m_height - 1;
             break;
         case E_PAPER_ROTATE_0:
         case E_PAPER_ROTATE_180:
-            return m_width;
+            return m_width - 1;
             break;
         default:
             return -1;
@@ -315,11 +315,11 @@ int Display::CanvasHeight() {
     switch(m_rotate) {
         case E_PAPER_ROTATE_90:
         case E_PAPER_ROTATE_270:
-            return m_width;
+            return m_width - 1;
             break;
         case E_PAPER_ROTATE_0:
         case E_PAPER_ROTATE_180:
-            return m_height;
+            return m_height - 1;
             break;
         default:
             return -1;
