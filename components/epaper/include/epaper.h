@@ -102,12 +102,21 @@ namespace EPaper {
         Display(const Config* conf);
         virtual ~Display();
 
+        /**
+         * @brief Get the display rotation
+         */ 
         Rotation Rotate() { return m_rotate; };
+        /**
+         * @brief Set the display rotation
+         */
         void Rotate(Rotation rotate) { m_rotate = rotate; };
 
+        /**
+         * @brief Check if the colors are currently inverted
+         */
         bool isInverted() { return m_color_invert; }
         /**
-         * @brief Invert display colors. Attention! This affects only the pixels drawn to the framebuffer after this method is called. A already drawn pixel will not be inverted!
+         * @brief Invert drawing colors. Attention! This affects only the pixels drawn to the framebuffer after this method is called. A already drawn pixel will not be inverted!
          */
         void Invert() { m_color_invert = !m_color_invert; }
 
