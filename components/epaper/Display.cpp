@@ -62,7 +62,6 @@ Display::~Display() {
 void Display::init() {
 
     // init GPIO Pins
-    //iot_epaper_gpio_init()
     ESP_LOGD(TAG, "GPIO conf: rst=%d, dc=%d, busy=%d", this->m_config->reset_pin, this->m_config->dc_pin, this->m_config->busy_pin);
 
     gpio_pad_select_gpio                (this->m_config->reset_pin);
@@ -80,7 +79,6 @@ void Display::init() {
     gpio_set_pull_mode      ((gpio_num_t)this->m_config->busy_pin, GPIO_PULLUP_ONLY);
 
     // SPI init
-    //iot_epaper_spi_init()
     ESP_LOGD(TAG, "SPI conf: mosi=%d, miso=%d, clk=%d, cs=%d", this->m_config->mosi_pin, this->m_config->miso_pin, this->m_config->sck_pin, this->m_config->cs_pin);
 
     spi_bus_config_t bus_config = {
@@ -121,7 +119,6 @@ void Display::init() {
     ESP_LOGI(TAG, "attach device to bus");
     ESP_ERROR_CHECK(::spi_bus_add_device(m_host, &dev_config, &m_handle));
 
-    //iot_epaper_epd_init()
     /* EPD hardware init start */
     /* reset the display */
     gpio_set_level((gpio_num_t)m_config->reset_pin, (~(m_config->rst_active_level)) & 0x1);
@@ -195,7 +192,6 @@ void Display::init() {
     sendData(lut_bb, sizeof(lut_bb));
     /* EPD hardware init end */
 
-    //iot_epaper_paint_init()
     m_rotate = E_PAPER_ROTATE_0;
     m_height = m_config->height;
     /* 1 byte represents 8 pixels, so width should be a multiple of 8 */

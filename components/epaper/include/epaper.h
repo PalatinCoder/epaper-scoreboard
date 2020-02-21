@@ -99,8 +99,8 @@ namespace EPaper {
          * @brief Create and init epaper display handler
          * @param conf configuration data
          */
-        Display(const Config* conf); //iot_epaper_create
-        virtual ~Display(); //iot_epaper_delete
+        Display(const Config* conf);
+        virtual ~Display();
 
         Rotation Rotate() { return m_rotate; };
         void Rotate(Rotation rotate) { m_rotate = rotate; };
