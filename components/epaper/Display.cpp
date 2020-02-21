@@ -42,9 +42,17 @@ Display::Display(const EPaper::Config* conf) {
     m_host = HSPI_HOST;
     m_dc_state.dc_pin = m_config->dc_pin;
     m_height = m_config->height;
+    /* 1 byte represents 8 pixels, so width should always be a multiple of 8 */
+    m_width = m_config->width % 8 ? m_config->width + 8 - (m_config->width % 8): m_config->width;
     m_color_invert = m_config->color_inv;
+    m_rotate = E_PAPER_ROTATE_0;
 
-    init();
+    m_framebuffer_size = m_width * m_height / 8; // pixel count divided by 8, as each bit represents a pixel
+    m_framebuffer = (uint8_t*) heap_caps_calloc(1, m_framebuffer_size, MALLOC_CAP_8BIT); // alloc 1 chunk of memory, in the needed size. 
+                                                                                         // calloc() clears the memory, so the framebuffer is filled with 0x00 (which is a black display)
+    ESP_LOGI(TAG, "size of framebuffer: %d bytes", m_framebuffer_size);
+
+    HardwareInit();
 }
 
 Display::~Display() {
@@ -59,7 +67,7 @@ Display::~Display() {
     ESP_ERROR_CHECK(::spi_bus_free(m_host));
 }
 
-void Display::init() {
+void Display::HardwareInit() {
 
     // init GPIO Pins
     ESP_LOGD(TAG, "GPIO conf: rst=%d, dc=%d, busy=%d", this->m_config->reset_pin, this->m_config->dc_pin, this->m_config->busy_pin);
@@ -191,16 +199,6 @@ void Display::init() {
     sendCommand(E_PAPER_LUT_BLACK_TO_BLACK);
     sendData(lut_bb, sizeof(lut_bb));
     /* EPD hardware init end */
-
-    m_rotate = E_PAPER_ROTATE_0;
-    m_height = m_config->height;
-    /* 1 byte represents 8 pixels, so width should be a multiple of 8 */
-    m_width = m_config->width % 8 ? m_config->width + 8 - (m_config->width % 8): m_config->width;
-
-    m_framebuffer_size = m_width * m_height / 8; // pixel count divided by 8, as each bit represents a pixel
-    m_framebuffer = (uint8_t*) heap_caps_calloc(1, m_framebuffer_size, MALLOC_CAP_8BIT); // alloc 1 chunk of memory, in the needed size. 
-                                                                                         // calloc() clears the memory, so the framebuffer is filled with 0x00 (which is a black display)
-    ESP_LOGI(TAG, "size of framebuffer: %d bytes", m_framebuffer_size);
 }
 
 void Display::waitWhileBusy() {

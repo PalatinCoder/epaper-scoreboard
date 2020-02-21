@@ -177,7 +177,7 @@ namespace EPaper {
         /**
          * @brief Init GPIO Pins and SPI Bus, send init commands to the EPD
          */
-        void init();
+        void HardwareInit();
 
         /**
          * @brief Raw SPI data transfer (single byte only!)
