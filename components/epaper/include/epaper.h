@@ -132,6 +132,21 @@ namespace EPaper {
          * @brief Draw a pixel on the framebuffer (rotation-aware)
          */
         void drawPixel(int x, int y);
+        /**
+         * @brief Draw Text on the framebuffer at the given coordinates
+         */
+        void drawText(Text text, int x, int y);
+        /**
+         * @brief Draw a line on the framebuffer
+         */
+        void drawLine(int x0, int y0, int x1, int y1);
+        /**
+         * @brief Draw a rectangle on the framebuffer
+         * @param x0, y0 The lower left corner
+         * @param x1, y1 The upper right corner
+         * @param filled Fill the rectangle completely or draw just the outline
+         */
+        void drawRectangle(int x0, int y0, int x1, int y1, bool filled);
 
     private:
 

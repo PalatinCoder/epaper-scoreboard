@@ -325,3 +325,37 @@ int Display::CanvasHeight() {
             return -1;
     }
 }
+
+void Display::drawLine(int x0, int y0, int x1, int y1) {
+    ESP_LOGD(TAG, "%s x0: %d y0: %d x1: %d y1: %d", __func__, x0, y0, x1, y1);
+    /* Bresenham algorithm */
+    int dx =  abs(x1-x0), sx = x0<x1 ? 1 : -1;
+    int dy = -abs(y1-y0), sy = y0<y1 ? 1 : -1;
+    int err = dx+dy, e2; /* error value e_xy */
+
+    while (1) {
+        drawPixel(x0,y0);
+        if (x0==x1 && y0==y1) break;
+        e2 = 2*err;
+        if (e2 > dy) { err += dy; x0 += sx; } /* e_xy+e_x > 0 */
+        if (e2 < dx) { err += dx; y0 += sy; } /* e_xy+e_y < 0 */
+    }
+}
+
+void Display::drawRectangle(int x0, int y0, int x1, int y1, bool filled) {
+    ESP_LOGD(TAG, "%s x0: %d y0: %d x1: %d y1: %d filled: %d", __func__, x0, y0, x1, y1, filled);
+
+    /* outline */
+    drawLine(x0, y0, x0, y1);
+    drawLine(x0, y0, x1, y0);
+    drawLine(x1, y0, x1, y1);
+    drawLine(x0, y1, x1, y1);
+    
+    if (!filled) return;
+
+    /* fill  with vertical lines */
+    /* skips the first and last one, since outline is already drawn */
+    for (int i = x0 + 1; i < x1; i++) {
+        drawLine(i, y0, i, y1);
+    }
+}
