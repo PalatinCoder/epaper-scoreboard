@@ -353,3 +353,56 @@ void Display::drawRectangle(int x0, int y0, int x1, int y1, bool filled) {
         drawLine(i, y0, i, y1);
     }
 }
+
+void Display::drawText(Text* text, int AnchorX, int AnchorY) {
+    ESP_LOGD(TAG, "%s %s at %d,%d", __func__, text->Value.c_str(), AnchorX, AnchorY);
+
+    /* Calculate reference point based on given anchor point and alignment */
+    int RefY = AnchorY; // Y coordinate never changes
+    int RefX;
+    switch (text->Align())
+    {
+    case Text::ALIGN_RIGHT:
+        RefX = AnchorX - text->BoxWidth();
+        break;
+    case Text::ALIGN_CENTER:
+        RefX = AnchorX - text->BoxWidth() / 2;
+        break;
+    default: // i.e. ALIGN_LEFT
+        RefX = AnchorX;
+        break;
+    } 
+
+    ESP_LOGD(TAG, "%s Reference Point is %d,%d", __func__, RefX, RefY);
+
+    /* now iterate over the characters */
+    for(std::string::size_type charIndex = 0; charIndex < text->Value.size(); charIndex++) {
+        char c = text->Value[charIndex];
+
+        /* Skip non-printable characters */
+        if (!text->Font()->hasCharacter(c)) { continue; }
+
+        /* Pointer to the charater's pixels */
+        uint8_t* pixelPtr = text->Font()->getCharacter(c);
+
+        /* Now draw the character pixel by pixel, i.e. bit by bit */
+        /* Pixels are stored as "horizontal lines", thus draw every column line by line */
+        int row,col;
+        for (row = 0; row < text->Font()->Height; row++) {
+            ESP_LOGD(TAG, "%s Char %c / Row %d is 0x%X", __func__, c, row, *pixelPtr);
+            for (col = 0; col < text->Font()->Width; col++) {
+                /* extract the bit out of the byte, draw it if it's set */
+                if (*pixelPtr & (0x80 >> (col % 8))) {
+                    /* starting point, offset by the width of already drawn characters + our current column */
+                    int pixelX = RefX + (charIndex * text->Font()->Width) + col;
+                    int pixelY = RefY + row;
+                    drawPixel(pixelX, pixelY); 
+                }
+                /* a row can occupy more than one byte (depending on the font width), so increment to the next byte if we are done with the current one */
+                if (col % 8 == 7) pixelPtr++;
+            }
+            /* if the "row borders" don't coincidentally align on bytes, increment to the next one for the net row */
+            if (text->Font()->Width % 8 != 0) pixelPtr++;
+        }
+    }
+}

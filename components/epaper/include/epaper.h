@@ -3,6 +3,7 @@
 
 #include <driver/spi_master.h>
 #include <driver/gpio.h>
+#include <string>
 
 #define EPAPER_CS_SETUP_NS      55
 #define EPAPER_CS_HOLD_NS       60
@@ -51,6 +52,87 @@
 #define E_PAPER_READ_OTP_DATA                               0xA2
 
 namespace EPaper {
+
+    namespace Font {
+        class Font {
+        public:
+            int Width;
+            int Height;
+            virtual uint8_t* getCharacter(char c) = 0;
+            virtual bool hasCharacter(char c) = 0;
+        protected:
+            virtual uint8_t* getFontTable() = 0;
+        };
+
+        class CourierNew12pt: public Font { 
+        public:
+            CourierNew12pt();
+            bool hasCharacter(char c);
+            uint8_t* getCharacter(char c);
+        private:
+            uint8_t* getFontTable();
+            static uint8_t fontTable[]; 
+        };
+
+        class CourierNew16pt: public Font { 
+        public:
+            CourierNew16pt();
+            bool hasCharacter(char c);
+            uint8_t* getCharacter(char c);
+        private:
+            uint8_t* getFontTable();
+            static uint8_t fontTable[]; 
+        };
+
+        class CourierNew20pt: public Font { 
+        public:
+            CourierNew20pt();
+            bool hasCharacter(char c);
+            uint8_t* getCharacter(char c);
+        private:
+            uint8_t* getFontTable();
+            static uint8_t fontTable[]; 
+        };
+
+        class CourierNew24pt: public Font { 
+        public:
+            CourierNew24pt();
+            bool hasCharacter(char c);
+            uint8_t* getCharacter(char c);
+        private:
+            uint8_t* getFontTable();
+            static uint8_t fontTable[]; 
+        };
+    }
+
+    class Text {
+    public:
+        enum Alignment {
+            ALIGN_LEFT,
+            ALIGN_CENTER,
+            ALIGN_RIGHT
+        };
+
+        std::string Value;
+
+        Text(std::string val, Font::Font* f, Alignment a = ALIGN_LEFT) : Value(val), m_font(f), m_align(a) {};
+
+        Text::Alignment Align() { return m_align; };
+        void Align(Text::Alignment val) { m_align = val; };
+
+        Font::Font* Font() { return m_font; };
+        void Font(Font::Font* f) { m_font = f; };
+
+        /**
+         * @brief Get the width in pixel of the complete text block
+         */
+        int BoxWidth() { return m_font->Width * Value.size(); }
+        int BoxHeight() { return m_font->Height; }
+
+    private:
+        Font::Font* m_font;
+        Alignment m_align;
+    };
 
     enum Rotation {
         E_PAPER_ROTATE_0,
@@ -143,8 +225,9 @@ namespace EPaper {
         void drawPixel(int x, int y);
         /**
          * @brief Draw Text on the framebuffer at the given coordinates
+         * @param x,y Coordinates of the anchor point
          */
-        void drawText(Text text, int x, int y);
+        void drawText(Text* text, int x, int y);
         /**
          * @brief Draw a line on the framebuffer
          */
