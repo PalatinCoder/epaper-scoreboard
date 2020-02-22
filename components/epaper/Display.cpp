@@ -275,15 +275,15 @@ void Display::drawPixel(int x, int y) {
         break;
     case E_PAPER_ROTATE_90:
         if (x < 0 || x >= m_height || y < 0 || y >= m_width) return;
-        drawPixelAbsolute(m_width - y, x);
+        drawPixelAbsolute(m_width - 1 - y, x);
         break;
     case E_PAPER_ROTATE_180:
         if (x < 0 || x >= m_width || y < 0 || y >= m_height) return;
-        drawPixelAbsolute(m_width - x, m_height - y);
+        drawPixelAbsolute(m_width - 1 - x, m_height - 1 - y);
         break;
     case E_PAPER_ROTATE_270:
         if (x < 0 || x >= m_height || y < 0 || y >= m_width) return;
-        drawPixelAbsolute(y, m_height - x);
+        drawPixelAbsolute(y, m_height - 1 - x);
         break;
     default:
         break;
