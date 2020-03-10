@@ -2,6 +2,8 @@
 #define _GATT_SERVER_H
 
 #include "host/ble_uuid.h"
+#include "host/ble_hs.h"
+#include "host/ble_gatt.h"
 
 namespace BLE {
 
@@ -23,5 +25,20 @@ namespace BLE {
         operator ble_uuid_t*();
     };
 
+
+    class GattServer {
+    private:
+        int GAPEventHandler(ble_gap_event* event, void* arg);
+        void Advertise();
+    public:
+        static GattServer& Instance();
+        ~GattServer() {}
+        void Run();
+        void Init(const char* name);
+    protected:
+        GattServer() {};
+        GattServer(const GattServer& other) {};
+        GattServer& operator = (const GattServer&);
+    };
 } // namespace BLE
 #endif // _GATT_SERVER_H
