@@ -26,6 +26,17 @@ namespace BLE {
         operator ble_uuid_t*();
     };
 
+    class Service {
+    private:
+        std::vector<ble_gatt_chr_def> m_characteristics;
+        ble_gatt_svc_def m_svc_def;
+    public:
+        void AddCharacteristic(Characteristic* c);
+        Service(BLE::UUID* uuid, uint8_t type);
+        virtual ~Service();
+        operator ble_gatt_svc_def();
+    };
+
 
     class GattServer {
     private:
