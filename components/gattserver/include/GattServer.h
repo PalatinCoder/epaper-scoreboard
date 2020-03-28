@@ -1,6 +1,7 @@
 #ifndef _GATT_SERVER_H
 #define _GATT_SERVER_H
 
+#include <vector>
 #include "host/ble_uuid.h"
 #include "host/ble_hs.h"
 #include "host/ble_gatt.h"
@@ -28,6 +29,7 @@ namespace BLE {
 
     class GattServer {
     private:
+        std::vector<ble_gatt_svc_def> m_services;
         int GAPEventHandler(ble_gap_event* event, void* arg);
         void Advertise();
     public:
@@ -35,6 +37,7 @@ namespace BLE {
         ~GattServer() {}
         void Run();
         void Init(const char* name);
+        void AddService(Service* s);
     protected:
         GattServer() {};
         GattServer(const GattServer& other) {};

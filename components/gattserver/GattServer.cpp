@@ -73,6 +73,12 @@ void GattServer::Init(const char* name = "NIMBLE") {
 }
 
 void GattServer::Run() {
+    /* Register all the services before we start advertising */
+    ESP_LOGD(TAG, "Server has %d services", m_services.size());
+    m_services.push_back((ble_gatt_svc_def) { BLE_GATT_SVC_TYPE_END });
+    ESP_ERROR_CHECK(ble_gatts_count_cfg(&m_services[0]));
+    ESP_ERROR_CHECK(ble_gatts_add_svcs(&m_services[0]));
+ 
     nimble_port_freertos_init([] (void* param) {
         ESP_LOGI(TAG, "task started");
         nimble_port_run(); // <-- this call returns when ble is stopped
@@ -137,9 +143,7 @@ int GattServer::GAPEventHandler(ble_gap_event* event, void* arg) {
     return 0;
 }
 
-int GattServer::AddService(Service* s) {
-    ESP_ERROR_CHECK(ble_gatts_count_cfg(*s));
-    ESP_ERROR_CHECK(ble_gatts_add_svcs(*s));
-    return 0;
+void GattServer::AddService(Service* s) {
+    m_services.push_back(*s);
 }
 
