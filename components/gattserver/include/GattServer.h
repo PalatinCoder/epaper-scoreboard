@@ -26,6 +26,21 @@ namespace BLE {
         operator ble_uuid_t*();
     };
 
+    class Characteristic {
+    private:
+        //std::vector<Descriptor> m_descriptors;
+        ble_gatt_chr_def m_chr_def;
+    public:
+        //void AddDescriptor(Descriptor d);
+        Characteristic(BLE::UUID* uuid, ble_gatt_chr_flags flags);
+        static int AccessHandler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg);
+        virtual void* GetValue();
+        virtual size_t GetValueSize();
+        virtual int SetValue(os_mbuf* om);
+        virtual ~Characteristic();
+        operator ble_gatt_chr_def();
+    };
+
     class Service {
     private:
         std::vector<ble_gatt_chr_def> m_characteristics;
