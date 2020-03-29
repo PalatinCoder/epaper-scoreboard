@@ -17,3 +17,5 @@ void Score::SetValueFromBuffer(void* buf, uint16_t len) {
     /* buffer is guaranteed by the low level implementation to be 1 byte only at this point, as we have set value_maxlen to 1 */
     this->setScore(*(uint8_t*)buf);
 }
+
+Score::operator std::__cxx11::string() { return std::to_string(m_score); }

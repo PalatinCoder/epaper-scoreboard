@@ -19,3 +19,5 @@ void Team::SetValueFromBuffer(void* buf, uint16_t len) {
     this->setName(std::string((char*)buf, len));
 }
 uint16_t Team::value_maxlen() { return 50; }
+
+Team::operator std::__cxx11::string() { return m_name; }
