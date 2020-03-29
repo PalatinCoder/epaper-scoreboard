@@ -76,7 +76,14 @@ namespace BLE {
          * Get the size of the characteristic's value. Access handler needs to know the size to append to the output buffer. Derived classes MUST override this
          */
         virtual size_t GetValueSize();
-        virtual int SetValue(os_mbuf* om);
+        /**
+         * Set the characteristic's value from a buffer. Derived classes MUST override this, if they are writeable
+         */
+        virtual void SetValueFromBuffer(void* buf, uint16_t len);
+        /**
+         * return the max num of bytes that can be written to the characteristic's value. Derived classes MUST override this, if they are writeable
+         */
+        virtual uint16_t value_maxlen();
     public:
         /**
          * Add a descriptor to the characteristic. Caller must make sure that the descriptor object lives at least as long as the characteristic lives

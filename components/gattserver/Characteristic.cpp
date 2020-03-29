@@ -35,9 +35,24 @@ int Characteristic::AccessHandler(uint16_t conn_handle, uint16_t attr_handle, st
     case BLE_GATT_ACCESS_OP_READ_CHR:
         ESP_LOGD(TAG, "Read Access to characteristic");
         return os_mbuf_append(ctxt->om, self->GetValue(), self->GetValueSize()) == 0 ? 0 : BLE_ATT_ERR_INSUFFICIENT_RES;
+
     case BLE_GATT_ACCESS_OP_WRITE_CHR:
+    {
         ESP_LOGD(TAG, "Write Access to characteristic");
-        return self->SetValue(ctxt->om);
+
+        uint16_t om_len = OS_MBUF_PKTLEN(ctxt->om);
+        if (om_len < 1 || om_len > self->value_maxlen()) return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
+
+        /* hold the written value in a local buffer and pass it to the higher level handler */
+        char* buf = new char[om_len];
+        uint16_t len; // bytes written to buffer
+        if (ble_hs_mbuf_to_flat(ctxt->om, buf, om_len, &len) > 0) return BLE_ATT_ERR_UNLIKELY;
+        self->SetValueFromBuffer(buf, len);
+        delete buf; // avoid memory leak
+
+        return 0;
+    }
+
     default:
         return BLE_ATT_ERR_UNLIKELY;
     }
@@ -54,4 +69,5 @@ Characteristic::operator ble_gatt_chr_def() {
 /* Generalized class can't return a value, these methods must be overriden by specialized class */
 void* Characteristic::GetValue() { return nullptr; }
 size_t Characteristic::GetValueSize() { return 0; }
-int Characteristic::SetValue(os_mbuf* om) { return BLE_ATT_ERR_UNLIKELY; }
+uint16_t Characteristic::value_maxlen() { return 0; }
+void Characteristic::SetValueFromBuffer(void* buf, uint16_t len) { return; }
