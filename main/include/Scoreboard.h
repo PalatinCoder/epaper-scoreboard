@@ -3,6 +3,31 @@
 
 #include "GattServer.h"
 #include "GattSpecial.h"
+#include "epaper.h"
+
+class View {
+private:
+    EPaper::Config displayConfig;
+public:
+    static View& Instance();
+    ~View() {};
+    /**
+     * Redraw the view
+     */
+    void Update(std::string scoreHome, std::string scoreAway, std::string teamHome, std::string teamAway);
+    /**
+     * Initialize the scoreboard view
+     */
+    void Init();
+    /**
+     * Set the view to standby, i.e. display a "screensaver"
+     */
+    void Standby();
+protected:
+    View() {};
+    View(const View& other) {};
+    View& operator = (const View&);
+};
 
 namespace Model {
     typedef void(*INotifyModelChanged)(void);
