@@ -27,41 +27,78 @@ namespace BLE {
         operator ble_uuid_t*();
     };
 
+    /**
+     * General BLE descriptor class. This class should not be constructed directly but be subclassed instead
+     */
     class Descriptor {
     private:
         BLE::UUID* m_uuid;
         ble_gatt_dsc_def m_dsc_def;
+        /**
+         * Callback for the NimBLE stack to handle access to a descriptor
+         * @param arg This should be set to the 'this' pointer of the object, so the access handler has access to the instance methods
+         */
+        static int AccessHandler(uint16_t conn_handle, uint16_t attr_handle, ble_gatt_access_ctxt* ctxt, void* arg);
+    protected:
+        /**
+         * This is called by the access handler to get the value of the descriptor. Derived classes MUST override this
+         */
+        virtual void* GetValue();
+        /**
+         * Get the size of the descriptor's value. Access handler needs to know the size to append to the output buffer. Derived classes MUST override this
+         */
+        virtual size_t GetValueSize();
     public:
         Descriptor(BLE::UUID uuid);
-        static int AccessHandler(uint16_t conn_handle, uint16_t attr_handle, ble_gatt_access_ctxt* ctxt, void* arg);
-        virtual void* GetValue();
-        virtual size_t GetValueSize();
         virtual ~Descriptor();
         operator ble_gatt_dsc_def();
     };
 
+    /**
+     * General BLE Characteristic class. This class should not be used directly but be subclassed instead
+     */
     class Characteristic {
     private:
         std::vector<ble_gatt_dsc_def> m_descriptors;
         ble_gatt_chr_def m_chr_def;
         BLE::UUID* m_uuid;
-    public:
-        void AddDescriptor(Descriptor* d);
-        Characteristic(BLE::UUID uuid, ble_gatt_chr_flags flags);
+        /**
+         * Callback for the NimBLE stack to handle access to a descriptor
+         * @param arg This should be set to the 'this' pointer of the object, so the access handler has access to the instance methods
+         */
         static int AccessHandler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg);
+    protected:
+        /**
+         * This is called by the access handler to get the value of the characteristic. Derived classes MUST override this
+         */
         virtual void* GetValue();
+        /**
+         * Get the size of the characteristic's value. Access handler needs to know the size to append to the output buffer. Derived classes MUST override this
+         */
         virtual size_t GetValueSize();
         virtual int SetValue(os_mbuf* om);
+    public:
+        /**
+         * Add a descriptor to the characteristic. Caller must make sure that the descriptor object lives at least as long as the characteristic lives
+         */
+        void AddDescriptor(Descriptor* d);
+        Characteristic(BLE::UUID uuid, ble_gatt_chr_flags flags);
         virtual ~Characteristic();
         operator ble_gatt_chr_def();
     };
 
+    /**
+     * General BLE Service
+     */
     class Service {
     private:
         std::vector<ble_gatt_chr_def> m_characteristics;
         ble_gatt_svc_def m_svc_def;
         BLE::UUID* m_uuid;
     public:
+        /**
+         * Add a characteristic to the service. Make sure the characteristic object lives as long as the service
+         */
         void AddCharacteristic(Characteristic* c);
         Service(BLE::UUID uuid, uint8_t type);
         virtual ~Service();

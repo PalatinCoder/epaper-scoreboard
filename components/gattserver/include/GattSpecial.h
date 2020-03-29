@@ -10,6 +10,7 @@ namespace BLE::Special {
     class BatteryLevelCharacteristic : public Characteristic {
         public:
             BatteryLevelCharacteristic();
+        protected:
             void* GetValue() override;
             size_t GetValueSize() override;
         private:
@@ -30,6 +31,7 @@ namespace BLE::Special {
     public:
         UserDescriptionDescriptor(std::string value);
         virtual ~UserDescriptionDescriptor();
+    protected:
         void* GetValue() override;
         size_t GetValueSize() override;
     };
