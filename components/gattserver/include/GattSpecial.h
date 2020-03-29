@@ -9,17 +9,19 @@ namespace BLE::Special {
 
     class BatteryLevelCharacteristic : public Characteristic {
         public:
-            BatteryLevelCharacteristic();
+            typedef uint8_t(*BatteryLevelCallback)();
+            BatteryLevelCharacteristic(BatteryLevelCallback cb);
         protected:
             void* GetValue() override;
             size_t GetValueSize() override;
         private:
+            BatteryLevelCallback batteryCallback;
             uint8_t m_value;
     };
 
     class BatteryLevelService : public Service {
         public:
-            BatteryLevelService();
+            BatteryLevelService(BatteryLevelCharacteristic::BatteryLevelCallback cb);
             ~BatteryLevelService();
         private:
             BatteryLevelCharacteristic* chr;
