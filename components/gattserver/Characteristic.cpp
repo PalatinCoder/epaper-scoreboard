@@ -24,6 +24,10 @@ Characteristic::~Characteristic() {
     ESP_LOGD(TAG, "Deleted characteristic object"); 
 }
 
+void Characteristic::AddDescriptor(Descriptor* d) {
+    this->m_descriptors.push_back(*d);
+}
+
 int Characteristic::AccessHandler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg) {
     Characteristic* self = (Characteristic*)arg;
 
@@ -39,10 +43,15 @@ int Characteristic::AccessHandler(uint16_t conn_handle, uint16_t attr_handle, st
     }
 }
 
-Characteristic::operator ble_gatt_chr_def() { return m_chr_def; }
+Characteristic::operator ble_gatt_chr_def() { 
+    /* finalize the list of descriptors */
+    m_descriptors.push_back((ble_gatt_dsc_def) { NULL });
+    m_chr_def.descriptors = &(m_descriptors[0]);
+
+    return m_chr_def;
+}
 
 /* Generalized class can't return a value, these methods must be overriden by specialized class */
 void* Characteristic::GetValue() { return nullptr; }
 size_t Characteristic::GetValueSize() { return 0; }
 int Characteristic::SetValue(os_mbuf* om) { return BLE_ATT_ERR_UNLIKELY; }
-
