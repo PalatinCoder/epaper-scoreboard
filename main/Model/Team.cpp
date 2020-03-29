@@ -5,11 +5,11 @@ using namespace Model;
 
 static const char* TAG = "Model::Team";
 
-Team::Team(BLE::UUID uuid, std::string desc, std::string name) : BLE::Characteristic(BLE::UUID(uuid), BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_WRITE), m_name(name) {
+Team::Team(BLE::UUID uuid, std::string desc, std::string name, INotifyModelChanged cb) : BLE::Characteristic(BLE::UUID(uuid), BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_WRITE), m_name(name), onChange(cb) {
     this->m_desc = new BLE::Special::UserDescriptionDescriptor(desc);
     this->AddDescriptor(m_desc);
 }
-void Team::setName(std::string name) { this->m_name = name; }
+void Team::setName(std::string name) { this->m_name = name; onChange(); }
 std::string Team::getName() { return this->m_name; }
 
 void* Team::GetValue() { return (void*)m_name.c_str(); }
