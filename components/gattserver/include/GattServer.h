@@ -30,9 +30,10 @@ namespace BLE {
     private:
         //std::vector<Descriptor> m_descriptors;
         ble_gatt_chr_def m_chr_def;
+        BLE::UUID* m_uuid;
     public:
         //void AddDescriptor(Descriptor d);
-        Characteristic(BLE::UUID* uuid, ble_gatt_chr_flags flags);
+        Characteristic(BLE::UUID uuid, ble_gatt_chr_flags flags);
         static int AccessHandler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg);
         virtual void* GetValue();
         virtual size_t GetValueSize();
@@ -45,9 +46,10 @@ namespace BLE {
     private:
         std::vector<ble_gatt_chr_def> m_characteristics;
         ble_gatt_svc_def m_svc_def;
+        BLE::UUID* m_uuid;
     public:
         void AddCharacteristic(Characteristic* c);
-        Service(BLE::UUID* uuid, uint8_t type);
+        Service(BLE::UUID uuid, uint8_t type);
         virtual ~Service();
         operator ble_gatt_svc_def();
     };

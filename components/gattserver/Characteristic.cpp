@@ -4,14 +4,18 @@ static const char* TAG = "BLE::Characteristic";
 
 using namespace BLE;
 
-Characteristic::Characteristic(BLE::UUID* uuid, ble_gatt_chr_flags flags) {
-    m_chr_def.uuid = *uuid;
+Characteristic::Characteristic(BLE::UUID uuid, ble_gatt_chr_flags flags) {
+    /* Copy the UUID into the object */
+    m_uuid = new BLE::UUID(uuid);
+
+    m_chr_def.uuid = *m_uuid;
     m_chr_def.flags = flags;
     m_chr_def.access_cb = Characteristic::AccessHandler;
     m_chr_def.arg = this;
     m_chr_def.descriptors = NULL; // for now
     m_chr_def.min_key_size = 0;
     m_chr_def.val_handle = NULL;
+
     ESP_LOGD(TAG, "Initialized characteristic object");
 }
 

@@ -13,7 +13,6 @@ namespace BLE::Special {
             void* GetValue() override;
             size_t GetValueSize() override;
         private:
-            static BLE::UUID* m_uuid;
             int m_value;
     };
 
@@ -22,7 +21,6 @@ namespace BLE::Special {
             BatteryLevelService();
             ~BatteryLevelService();
         private:
-            static BLE::UUID* m_uuid;
             BatteryLevelCharacteristic* chr;
     };
 

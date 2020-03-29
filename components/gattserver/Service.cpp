@@ -5,11 +5,15 @@ static const char* TAG = "BLE::Service";
 
 using namespace BLE;
 
-Service::Service(BLE::UUID* uuid, uint8_t type) { 
+Service::Service(BLE::UUID uuid, uint8_t type) { 
+    /* Copy the uuid into this object*/
+    m_uuid = new BLE::UUID(uuid);
+
     m_svc_def.type = type;
-    m_svc_def.uuid = *uuid;
+    m_svc_def.uuid = *m_uuid;
     m_svc_def.includes = NULL; // no includes yet
     m_svc_def.characteristics = NULL; // for the moment
+
     ESP_LOGD(TAG, "initialized service object");
 }
 
