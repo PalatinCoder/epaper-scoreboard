@@ -2,6 +2,7 @@
 #define _GATT_SERVER_H
 
 #include <vector>
+#include <string>
 #include "host/ble_uuid.h"
 #include "host/ble_hs.h"
 #include "host/ble_gatt.h"
