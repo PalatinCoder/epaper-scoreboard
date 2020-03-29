@@ -17,7 +17,10 @@ Service::Service(BLE::UUID uuid, uint8_t type) {
     ESP_LOGD(TAG, "initialized service object");
 }
 
-Service::~Service() { ESP_LOGD(TAG, "deleted service object"); }
+Service::~Service() { 
+    delete m_uuid;
+    ESP_LOGD(TAG, "deleted service object"); 
+}
 
 void Service::AddCharacteristic(Characteristic* c) {
     m_characteristics.push_back(*c);

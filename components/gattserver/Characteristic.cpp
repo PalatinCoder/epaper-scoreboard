@@ -19,7 +19,10 @@ Characteristic::Characteristic(BLE::UUID uuid, ble_gatt_chr_flags flags) {
     ESP_LOGD(TAG, "Initialized characteristic object");
 }
 
-Characteristic::~Characteristic() { ESP_LOGD(TAG, "Deleted characteristic object"); }
+Characteristic::~Characteristic() { 
+    delete m_uuid;
+    ESP_LOGD(TAG, "Deleted characteristic object"); 
+}
 
 int Characteristic::AccessHandler(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt* ctxt, void* arg) {
     Characteristic* self = (Characteristic*)arg;
