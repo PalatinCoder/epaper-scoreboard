@@ -13,7 +13,7 @@ namespace BLE::Special {
             void* GetValue() override;
             size_t GetValueSize() override;
         private:
-            int m_value;
+            uint8_t m_value;
     };
 
     class BatteryLevelService : public Service {
