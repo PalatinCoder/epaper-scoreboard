@@ -6,7 +6,7 @@ static const char* TAG = "main";
 /**
  * What still should be done here:
  * 
- * The callback game isn't really C++ like
+ * The callback game isn't really C++ like (well actually it is, since we don't have a controller class and everything is together by the main method, so the callback might as well be global)
  * Updating the view should be handled by a seperate thread, to not block the BLE response
  * Is this thing thread safe anyways?...
  */
