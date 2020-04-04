@@ -40,7 +40,7 @@ namespace Model {
         size_t GetValueSize() override;
         void SetValueFromBuffer(void* buf, uint16_t len) override;
         uint16_t value_maxlen() override;
-        INotifyModelChanged onChange;
+        INotifyModelChanged notifyModelChanged;
     public:
         Score(BLE::UUID uuid, std::string description, INotifyModelChanged cb);
         void setScore(uint8_t s);
@@ -56,7 +56,7 @@ namespace Model {
         size_t GetValueSize() override;
         void SetValueFromBuffer(void* buf, uint16_t len) override;
         uint16_t value_maxlen() override;
-        INotifyModelChanged onChange;
+        INotifyModelChanged notifyModelChanged;
     public:
         Team(BLE::UUID uuid, std::string desc, std::string name, INotifyModelChanged cb);
         void setName(std::string name);

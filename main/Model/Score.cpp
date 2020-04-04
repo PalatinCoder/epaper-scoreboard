@@ -2,11 +2,11 @@
 
 using namespace Model;
 
-Score::Score(BLE::UUID uuid, std::string description, INotifyModelChanged cb) : BLE::Characteristic(BLE::UUID(uuid), BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_WRITE), m_score(0), onChange(cb) {
+Score::Score(BLE::UUID uuid, std::string description, INotifyModelChanged cb) : BLE::Characteristic(BLE::UUID(uuid), BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_WRITE), m_score(0), notifyModelChanged(cb) {
     this->m_desc = new BLE::Special::UserDescriptionDescriptor(description);
     this->AddDescriptor(m_desc);
 }
-void Score::setScore(uint8_t score) { this->m_score = score; onChange(); }
+void Score::setScore(uint8_t score) { this->m_score = score; notifyModelChanged(); }
 uint8_t Score::getScore() { return this->m_score; }
 
 void* Score::GetValue() { return (void*)&m_score; }
