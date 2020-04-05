@@ -66,12 +66,13 @@ void View::Update(std::string scoreHome, std::string scoreAway, std::string team
 
     EPaper::Display display(&displayConfig);
     EPaper::Font::CourierNew16pt teamNameFont;
-    EPaper::Font::CourierNew24pt scoreFont;
+    EPaper::Font::OpenSansNumbers100pt scoreFont;
+    EPaper::Font::CourierNew24pt dividerFont;
     EPaper::Text homeTeam(teamHome, &teamNameFont, EPaper::Text::ALIGN_LEFT);
     EPaper::Text guestTeam(teamAway, &teamNameFont, EPaper::Text::ALIGN_RIGHT);
     EPaper::Text homeScore(scoreHome, &scoreFont, EPaper::Text::ALIGN_CENTER);
     EPaper::Text guestScore(scoreAway, &scoreFont, EPaper::Text::ALIGN_CENTER);
-    EPaper::Text divider(":", &scoreFont, EPaper::Text::ALIGN_CENTER);
+    EPaper::Text divider(":", &dividerFont, EPaper::Text::ALIGN_CENTER);
 
     display.Rotate(EPaper::E_PAPER_ROTATE_90);
 
@@ -79,9 +80,11 @@ void View::Update(std::string scoreHome, std::string scoreAway, std::string team
 
 
     /* Scores */
-    display.drawText(&homeScore, display.CanvasWidth() * 0.25, display.CanvasHeight() * 0.5);
+    // score's Y origin = center of the display, offset by the team name boxes (Remove one summand if both teams are on the same line)
+    int scoreOriginY = (display.CanvasHeight() + homeTeam.BoxHeight() + guestTeam.BoxHeight() - scoreFont.Height) * 0.5;
+    display.drawText(&homeScore, display.CanvasWidth() * 0.25, scoreOriginY);
     display.drawText(&divider, display.CanvasWidth() * 0.5, display.CanvasHeight() * 0.5);
-    display.drawText(&guestScore, display.CanvasWidth() * 0.75, display.CanvasHeight() * 0.5);
+    display.drawText(&guestScore, display.CanvasWidth() * 0.75, scoreOriginY);
 
     /* Teamname Backgroundbox */
     display.drawRectangle(0, 0, display.CanvasWidth(), homeTeam.BoxHeight() + guestTeam.BoxHeight(), true);
