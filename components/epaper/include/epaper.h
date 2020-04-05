@@ -64,6 +64,16 @@ namespace EPaper {
             virtual uint8_t* getFontTable() = 0;
         };
 
+        class OpenSansNumbers100pt: public Font { 
+        public:
+            OpenSansNumbers100pt();
+            bool hasCharacter(char c);
+            uint8_t* getCharacter(char c);
+        private:
+            uint8_t* getFontTable();
+            static uint8_t fontTable[]; 
+        };
+
         class CourierNew12pt: public Font { 
         public:
             CourierNew12pt();
